@@ -1,0 +1,33 @@
+@startuml
+
+header: Synchronizing Membership Administrators
+title: Regulated Areas
+
+frame "Membership administrator A" {
+    component Manager as managerMembershipAdminA
+}
+
+frame "Membership administrator B" {
+    component Manager as managerMembershipAdminB
+}
+
+frame "Peer Consumer" {
+    component Manager as managerPeerConsumer
+}
+
+frame "Peer Provider" {
+    component Manager as managerPeerProvider
+    component "Policy Decision Point" as pdp
+}
+
+managerMembershipAdminA --> managerMembershipAdminB: periodically synchronizes\nmembership list
+managerMembershipAdminB --> managerMembershipAdminA: periodically synchronizes\nmembership list
+
+managerMembershipAdminB <-- pdp: periodically synchronizes \nmembership list
+managerMembershipAdminB <-- managerPeerProvider: Contract with Peer Registration Grant
+managerMembershipAdminA <-- managerPeerConsumer: Contract with Peer Registration Grant
+
+managerPeerConsumer -right-> managerPeerProvider: Contract with Service Connection Grant referencing the Regulated Area
+managerPeerProvider -> pdp: evaluate membership \nof Regulated Area
+
+@enduml

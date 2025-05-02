@@ -1,0 +1,23 @@
+@startuml
+
+autonumber
+header: Regulated Area extension
+title: Registering a Peer as a Membership administrator
+
+box "Prospect Membership Administrator"
+  participant "Manager" as managerPeer
+end box
+box "Membership administrator"
+  participant "Manager" as managerMembershipAdmin
+end box
+
+managerPeer -> managerPeer: Create Contract with a  __PeerRegistrationGrant__\nwith role `MEMBERSHIP_ADMINISTRATOR`
+managerPeer -> managerPeer: Add accept signature
+managerPeer -> managerMembershipAdmin: Submit Contract
+managerMembershipAdmin -> managerMembershipAdmin: Add accept signature
+managerMembershipAdmin -> managerPeer: Accept Contract
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+@enduml

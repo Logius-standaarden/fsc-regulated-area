@@ -1,0 +1,26 @@
+@startuml
+
+autonumber
+header: Regulated Area extension
+title: Validating Contact with ServiceConnectionGrant
+
+box "Consumer Peer"
+  participant "Manager" as managerConsumerPeer
+end box
+box "Provider Peer"
+  participant "Manager" as managerProviderPeer
+end box
+
+managerConsumerPeer -> managerProviderPeer: Submit Contract with a  __ServiceConnectionGrant__
+managerProviderPeer -> managerProviderPeer: Verify Contract adheres to rules \ndefined by Membership Administrator\nand is a member
+alt Contract adheres to rules and is a member
+   managerProviderPeer -> managerProviderPeer: Add accept signature
+else
+   managerProviderPeer -> managerProviderPeer: Add reject signature
+end
+managerProviderPeer -> managerConsumerPeer: Submit Contract with signature
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+@enduml

@@ -1,0 +1,42 @@
+@startuml
+
+autonumber
+header: Regulated Area extension
+title: Validating Contact where consumer is not a member
+
+box "Consumer Peer"
+  participant "Manager" as managerConsumerPeer
+end box
+box "Provider Peer"
+  participant "Manager" as managerProviderPeer
+end box
+box "Membership Administrator A"
+    participant "Manager" as managerMembershipAdministratorA
+end box
+
+group Provider Peer membership registration
+managerProviderPeer -> managerProviderPeer: Create Contract with a  __PeerRegistrationGrant__
+managerProviderPeer -> managerProviderPeer: Add accept signature
+managerProviderPeer -> managerMembershipAdministratorA: Submit Contract
+managerMembershipAdministratorA -> managerMembershipAdministratorA: Add accept signature
+managerMembershipAdministratorA ->  managerProviderPeer: Accept Contract
+end group
+
+group Connecting to a Service
+managerConsumerPeer -> managerProviderPeer: Submit Contract with a  __ServiceConnectionGrant__\nand `regulated_area_name`\nand `membership_administrator_peer_id`
+alt get membership list from peer registration grant
+managerProviderPeer -> managerMembershipAdministratorB: get members for `regulated_area_name`
+managerMembershipAdministratorB --> managerProviderPeer: members list
+else get membership list from `membership_administrator_peer_id`
+managerProviderPeer -> managerMembershipAdministratorA: get members for `regulated_area_name`
+managerMembershipAdministratorA --> managerProviderPeer: members list
+end
+managerMembershipAdministratorA --> managerProviderPeer: members list
+managerProviderPeer -> managerProviderPeer: "Consumer Peer" is NOT a member, add Reject Signature
+managerProviderPeer -> managerConsumerPeer: Submit Contract with signature
+end group
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+@enduml

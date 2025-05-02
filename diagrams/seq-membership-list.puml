@@ -1,0 +1,23 @@
+@startuml
+
+autonumber
+header: Regulated Area
+title: Updating Membership List
+
+box "Membership administrator"
+  participant "Manager" as managerMembershipAdmin
+end box
+box "Membership List"
+  participant "Membership List" as membershipList
+end box
+
+loop periodically
+membershipList -> managerMembershipAdmin: request approved members
+return approved members
+membershipList -> membershipList: Update Membership List
+end
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+@enduml

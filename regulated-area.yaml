@@ -1,0 +1,157 @@
+openapi: 3.0.3
+info:
+  title: FSC Membership Administrator
+  description: Membership Administrator REST API
+  version: 0.0.1
+servers:
+  - url: https://{membershipAdministratorUrl}:8443/v1
+    variables:
+      managerUrl:
+        default: localhost
+paths:
+  /regulated-areas/${regulated_area_name}/members/:
+    get:
+      tags:
+        - membership administrator
+      summary: Get all members of a Regulated Area
+      operationId: getMembers
+      parameters:
+        - $ref: "#/components/parameters/queryPaginationCursor"
+        - $ref: "#/components/parameters/queryPaginationLimit"
+        - $ref: "#/components/parameters/queryPaginationOrder"
+        - $ref: "#/components/parameters/pathRegulatedAreaName"
+        - in: query
+          description: A list of Peer IDs on which to check if they are a Member. When this query parameter is set the pagination parameters and other filters should be ignored
+          name: peer_id
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/peerID"
+          style: form
+          explode: false
+          required: false
+      responses:
+        200:
+          description: members of the Regulated Area
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  members:
+                    type: array
+                    description: list of all members in the Regulated Area
+                    items:
+                      $ref: "#/components/schemas/member"
+                  pagination:
+                    $ref: "#/components/schemas/paginationResult"
+                required:
+                  - members
+                  - pagination
+components:
+  parameters:
+    queryPaginationCursor:
+      in: query
+      name: cursor
+      description: A cursor from which paginated results should be returned. Leave empty for the first page
+      schema:
+        type: string
+      required: false
+    queryPaginationLimit:
+      in: query
+      name: limit
+      description: The maximum number of results
+      schema:
+        type: integer
+        format: uint32
+        maximum: 1000
+        minimum: 1
+        default: 25
+      required: false
+    queryPaginationOrder:
+      in: query
+      name: sort_order
+      description: The sorting order of the results
+      required: false
+      schema:
+        $ref: "#/components/schemas/sortOrder"
+    pathRegulatedAreaName:
+      in: path
+      name: regulated_area_name
+      description: The name or identifier of the Regulated Area
+      schema:
+        type: string
+        example: test-area
+      required: true
+  schemas:
+    member:
+      type: object
+      properties:
+        peer:
+          type: object
+          oneOf:
+            - $ref: "#/components/schemas/member_peer"
+            - $ref: "#/components/schemas/member_membership_administrator"
+          discriminator:
+            propertyName: role
+            mapping:
+              PEER: "#/components/schemas/member_peer"
+              MEMBERSHIP_ADMINISTRATOR: "#/components/schemas/member_membership_administrator"
+    member_peer:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/peerID"
+        role:
+          $ref: "#/components/schemas/role"
+        validated_by:
+          $ref: "#/components/schemas/validated_by"
+      required:
+        - id
+        - role
+        - validated_by
+    member_membership_administrator:
+      type: object
+      properties:
+        id:
+          $ref: "#/components/schemas/peerID"
+        role:
+          $ref: "#/components/schemas/role"
+      required:
+        - id
+        - role
+    validated_by:
+      description: the Membership Administrator that has validated the membership of this Peer
+      type: object
+      properties:
+        membership_administrator_peer_id:
+          $ref: "#/components/schemas/peerID"
+      required:
+        - membership_administrator_peer_id
+    peerID:
+      description: The ID of a Peer
+      type: string
+      examples:
+        - "12345678901234567891"
+      minLength: 3
+      maxLength: 255
+    role:
+      description: The role of the member
+      type: string
+      enum:
+        - MEMBER
+        - MEMBERSHIP_ADMINISTRATOR
+    sortOrder:
+      description: The order in which the results should be returned
+      type: string
+      enum:
+        - SORT_ORDER_ASCENDING
+        - SORT_ORDER_DESCENDING
+    paginationResult:
+      type: object
+      properties:
+        next_cursor:
+          description: A cursor that can be used to retrieve the next page or an empty string if there are no more results
+          type: string
+      required:
+        - next_cursor

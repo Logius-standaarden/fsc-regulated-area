@@ -1,0 +1,53 @@
+@startuml
+
+autonumber
+header: Regulated Area extension
+title: Validating Contact where Peer is a member of different Regulated Area
+
+box "Consumer Peer"
+  participant "Manager" as managerConsumerPeer
+end box
+box "Membership Administrator A"
+    participant "Manager" as managerMembershipAdministratorA
+end box
+box "Provider Peer"
+  participant "Manager" as managerProviderPeer
+end box
+box "Membership Administrator B"
+    participant "Manager" as managerMembershipAdministratorB
+end box
+
+group Consumer Peer membership registration
+managerConsumerPeer -> managerConsumerPeer: Create Contract with a  __PeerRegistrationGrant__ for `regulated_area` "X"
+managerConsumerPeer -> managerConsumerPeer: Add accept signature
+managerConsumerPeer -> managerMembershipAdministratorA: Submit Contract
+managerMembershipAdministratorA -> managerMembershipAdministratorA: Add accept signature
+managerMembershipAdministratorA ->  managerConsumerPeer: Accept Contract
+end group
+
+group Provider Peer membership registration
+managerProviderPeer -> managerProviderPeer: Create Contract with a  __PeerRegistrationGrant__ for `regulated_area` "Y"
+managerProviderPeer -> managerProviderPeer: Add accept signature
+managerProviderPeer -> managerMembershipAdministratorB: Submit Contract
+managerMembershipAdministratorB -> managerMembershipAdministratorB: Add accept signature
+managerMembershipAdministratorB ->  managerProviderPeer: Accept Contract
+end group
+
+group Connecting to a Service
+managerConsumerPeer -> managerProviderPeer: Submit Contract with a  __ServiceConnectionGrant__\nand`membership_administrator_peer_id`\nand `regulated_area_name` "X"
+managerProviderPeer -> managerProviderPeer: verify  the value of `regulated_area`\nis the same as the Regulated Area of the Service
+alt get membership list from peer registration grant
+managerProviderPeer -> managerMembershipAdministratorB: get members for `regulated_area_name`
+managerMembershipAdministratorB --> managerProviderPeer: members list for `regulated_area_name` "Y"
+else get membership list from `membership_administrator_peer_id`
+managerProviderPeer -> managerMembershipAdministratorA: get members for `regulated_area_name` "Y"
+managerMembershipAdministratorA --> managerProviderPeer: members list
+end
+managerProviderPeer -> managerProviderPeer: "Consumer Peer" is a NOT member and `regulated_area` is different\nadd Reject Signature
+managerProviderPeer -> managerConsumerPeer: Submit Contract with signature
+end group
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+@enduml

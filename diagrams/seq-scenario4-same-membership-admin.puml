@@ -1,0 +1,43 @@
+@startuml
+
+autonumber
+header: Regulated Area extension
+title: Validating Contact with different Regulated Areas governed by the same Membership Administrator
+
+box "Consumer Peer"
+  participant "Manager" as managerConsumerPeer
+end box
+box "Membership Administrator"
+    participant "Manager" as managerMembershipAdministrator
+end box
+box "Provider Peer"
+  participant "Manager" as managerProviderPeer
+end box
+
+group Consumer Peer membership registration
+managerConsumerPeer -> managerConsumerPeer: Create Contract with a  __PeerRegistrationGrant__ with `regulated_area` "X"
+managerConsumerPeer -> managerConsumerPeer: Add accept signature
+managerConsumerPeer -> managerMembershipAdministrator: Submit Contract
+managerMembershipAdministrator -> managerMembershipAdministrator: Add accept signature
+managerMembershipAdministrator ->  managerConsumerPeer: Accept Contract
+end group
+
+group Provider Peer membership registration
+managerProviderPeer -> managerProviderPeer: Create Contract with a  __PeerRegistrationGrant__ with `regulated_area` "Y"
+managerProviderPeer -> managerProviderPeer: Add accept signature
+managerProviderPeer -> managerMembershipAdministrator: Submit Contract
+managerMembershipAdministrator -> managerMembershipAdministrator: Add accept signature
+managerMembershipAdministrator ->  managerProviderPeer: Accept Contract
+end group
+
+group Connecting to a Service
+managerConsumerPeer -> managerProviderPeer: Submit Contract with a  __ServiceConnectionGrant__\nand `regulated_area` "X"
+managerProviderPeer -> managerProviderPeer: verify  the value of `regulated_area`\nis the same as the Regulated Area of the Service
+managerProviderPeer -> managerProviderPeer: Add Reject signature: Regulated Area name for service isdifferent\nfrom Regulated Area name provided in ServiceConnectionGrant
+managerProviderPeer -> managerConsumerPeer: Submit Contract with signature
+end group
+
+skinparam sequenceBoxBorderColor #transparent
+skinparam boxPadding 50
+hide footbox
+@enduml
