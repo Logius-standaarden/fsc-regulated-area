@@ -1,41 +1,89 @@
-var respecConfig = {
+let respecConfig = {
   useLogo: true,
   useLabel: true,
-  license: "cc0",
+  license: "cc-by",
   specStatus: "WV",
-  specType: "HR",
-  pubDomain: "dk",
-  shortName: "template",
-  publishDate: "2023-01-31",
-  publishVersion: "0.0.1",
-  title: "Template",
-  // previousPublishVersion: "(none)",
-  content: {"ch01": "informative", "ch02": "", "mermaid": ""},
+  specType: "ST",
+  pubDomain: "fsc",
+  shortName: "regulated-area",
+  publishDate: "2025-09-26",
+  publishVersion: "1.0.0",
+
   editors:
-    [
-      {
-        name: "Logius Standaarden",
-        company: "Logius",
-        companyURL: "https://github.com/Logius-standaarden",
-      }
-    ],
+      [
+          {
+              name: "VNG Realisatie",
+              company: "VNG",
+              companyURL: "https://vng.nl/rubrieken/onderwerpen/standaarden",
+          },
+          {
+              name: "Logius",
+              company: "Logius",
+              companyURL: "https://github.com/Logius-standaarden",
+          }
+      ],
   authors:
-    [
-      {
-        name: "Logius Standaarden",
-        company: "Logius",
-        companyURL: "https://github.com/Logius-standaarden",
-      }
-    ],
-  github: "https://github.com/Logius-standaarden/ReSpec-template",
-
-
-  // Create PDF and link to file in header (optional):
-  alternateFormats: [
-      {
-          label: "pdf",
-          uri: "template.pdf",
-      },
-  ],
-  postProcess: [window.respecMermaid.createFigures]
+      [
+          {
+              name: "Eelco Hotting",
+              company: "Hotting IT",
+              extras: [
+                  {
+                      name: "Email",
+                      href: "mailto:rfc@hotting.it",
+                  }
+              ]
+          },
+          {
+              name: "Ronald Koster",
+              company: "PhillyShell",
+              extras: [
+                  {
+                      name: "Email",
+                      href: "mailto:rfc@phillyshell.nl",
+                  }
+              ]
+          },
+          {
+              name: "Henk van Maanen",
+              company: "AceWorks",
+              extras: [
+                  {
+                      name: "Email",
+                      href: "mailto:henk.van.maanen@aceworks.nl",
+                  }
+              ]
+          },
+          {
+              name: "Niels Dequeker",
+              company: "ND Software",
+              extras: [
+                  {
+                      name: "Email",
+                      href: "mailto:niels@nd-software.be",
+                  }
+              ]
+          },
+          {
+              name: "Edward van Gelderen",
+              company: "vanG IT",
+              extras: [
+                  {
+                      name: "Email",
+                      href: "mailto:e.van.gelderen@vang.nl",
+                  }
+              ]
+          },
+          {
+              name: "Pim Gaemers",
+              company: "Apily",
+              extras: [
+                  {
+                      name: "Email",
+                      href: "mailto:pim.gaemers@apily.dev",
+                  }
+              ]
+          },
+      ],
+  github: "https://github.com/Logius-standaarden/fsc-properties",
 };
